@@ -27,22 +27,26 @@ class Player {
       this.size.height
     );
   }
-  initialize() {
-    this.position.y += this.speed;
-    this.speed += this.gravity;
+  moveGravity() {
+    if (this.position.y + this.size.height <= canvas.height) {
+      this.position.y += this.speed;
+      this.speed += this.gravity;
+    } else this.speed = 0;
   }
   render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     this.create();
-    this.initialize();
+    this.moveGravity();
+    requestAnimationFrame(() => this.render());
   }
 }
 
 const player = new Player();
 
-function render() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  player.render();
-  requestAnimationFrame(render);
-}
+// function render() {
+//   player.render();
 
-render();
+//   console.log("render");
+// }
+
+player.render();
