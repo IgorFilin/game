@@ -70,11 +70,19 @@ class Player {
     }
   }
   moved() {
-    if (this.keys.right.pressed) {
+    if (this.keys.right.pressed && this.position.x <= canvas.width / 2) {
       this.speed.x = 5;
-    } else if (this.keys.left.pressed) {
+    } else if (this.keys.left.pressed && this.position.x >= canvas.width / 4) {
       this.speed.x = -5;
     } else {
+      platforms.forEach((platform) => {
+        if (this.keys.right.pressed) {
+          platform.position.x += -5;
+        }
+        if (this.keys.left.pressed) {
+          platform.position.x += 5;
+        }
+      });
       this.speed.x = 0;
     }
     if (this.keys.space.pressed && this.speed.y === 0) {
@@ -84,7 +92,7 @@ class Player {
 }
 
 class Platform {
-  constructor(x, y, color, width, height) {
+  constructor(x, y, color = "red", width = 200, height = 30) {
     this.position = {
       x: x,
       y: y,
@@ -123,7 +131,7 @@ addEventListener("keyup", (e) => {
 
 const player = new Player();
 
-const platform = new Platform(550, 1150, "red", 200, 20);
+const platforms = [new Platform(550, 1150), new Platform(750, 950)];
 
 // render функция
 let is = false;
@@ -134,17 +142,22 @@ function render() {
   player.create();
   player.moved();
   player.moveRender();
-  platform.create();
+  platforms.forEach((platform) => {
+    platform.create();
+  });
   // game loop
-  if (
-    player.position.y + player.size.height <= platform.position.y &&
-    player.position.y + player.size.height + player.speed.y >=
-      platform.position.y &&
-    player.position.x + player.size.height >= platform.position.x &&
-    player.position.x <= platform.position.x + platform.size.width
-  ) {
-    player.speed.y = 0;
-  }
+  // platform collision
+  platforms.forEach((platform) => {
+    if (
+      player.position.y + player.size.height <= platform.position.y &&
+      player.position.y + player.size.height + player.speed.y >=
+        platform.position.y &&
+      player.position.x + player.size.height >= platform.position.x &&
+      player.position.x <= platform.position.x + platform.size.width
+    ) {
+      player.speed.y = 0;
+    }
+  });
 
   requestAnimationFrame(render);
 }
