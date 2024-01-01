@@ -30,9 +30,10 @@ setInterval(() => {
 class Player {
   constructor() {
     this.position = {
-      x: 60,
+      x: 150,
       y: 50,
     };
+    this.currentDirection = 1;
     this.size = {
       width: 150,
       height: 115,
@@ -55,14 +56,29 @@ class Player {
     };
   }
   create(ctx) {
-    // Определите текущий кадр для анимации
+    // Сохраняем текущие настройки контекста
+    ctx.save();
+    let positionX;
+    if (this.currentDirection === 1) {
+      positionX = this.position.x;
+    } else {
+      positionX = -this.position.x - this.size.width;
+    }
+
+    // Отзеркаливаем по горизонтали
+    ctx.scale(this.currentDirection, 1);
+
+    // Рисуем отзеркаленное изображение
     ctx.drawImage(
       playerImage,
-      this.position.x,
+      positionX, // Позиция x отзеркаленного изображения
       this.position.y,
       this.size.width,
       this.size.height
     );
+
+    // Восстанавливаем предыдущие настройки контекста
+    ctx.restore();
   }
   moveRender() {
     this.position.y += this.speed.y;
@@ -83,9 +99,11 @@ class Player {
     switch (keyCode) {
       case 68:
         this.keys.right.pressed = statusPressed;
+        this.currentDirection = 1;
         break;
       case 65:
         this.keys.left.pressed = statusPressed;
+        this.currentDirection = -1;
         break;
       case 32: {
         this.keys.space.pressed = statusPressed;
@@ -115,4 +133,4 @@ class Player {
   }
 }
 
-export { playerImage, Player };
+export { Player };
