@@ -14,7 +14,7 @@ class Player {
       width: 50,
       height: 50,
     };
-    this.gravity = 1;
+    this.gravity = 0.4;
     this.speed = {
       x: 0,
       y: 0,
@@ -32,6 +32,7 @@ class Player {
     };
   }
   create() {
+    ctx.fillStyle = "black";
     ctx.fillRect(
       this.position.x,
       this.position.y,
@@ -42,7 +43,7 @@ class Player {
   moveRender() {
     this.position.y += this.speed.y;
     this.position.x += this.speed.x;
-    if (this.position.y + this.size.height <= canvas.height) {
+    if (this.position.y + this.size.height < canvas.height) {
       this.speed.y += this.gravity;
     } else {
       this.speed.y = 0;
@@ -76,20 +77,32 @@ class Player {
     } else {
       this.speed.x = 0;
     }
-    if (
-      this.keys.space.pressed &&
-      this.position.y === canvas.height - this.size.height
-    ) {
-      this.speed.y = -25;
+    if (this.keys.space.pressed && this.speed.y === 0) {
+      this.speed.y = -15;
     }
   }
+}
 
-  render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.create();
-    this.moved();
-    this.moveRender();
-    requestAnimationFrame(() => this.render());
+class Platform {
+  constructor(x, y, color, width, height) {
+    this.position = {
+      x: x,
+      y: y,
+    };
+    this.size = {
+      width,
+      height,
+    };
+    this.color = color;
+  }
+  create() {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(
+      this.position.x,
+      this.position.y,
+      this.size.width,
+      this.size.height
+    );
   }
 }
 
@@ -110,4 +123,30 @@ addEventListener("keyup", (e) => {
 
 const player = new Player();
 
-player.render();
+const platform = new Platform(550, 1150, "red", 200, 20);
+
+// render функция
+let is = false;
+
+function render() {
+  // initial
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  player.create();
+  player.moved();
+  player.moveRender();
+  platform.create();
+  // game loop
+  if (
+    player.position.y + player.size.height <= platform.position.y &&
+    player.position.y + player.size.height + player.speed.y >=
+      platform.position.y &&
+    player.position.x + player.size.height >= platform.position.x &&
+    player.position.x <= platform.position.x + platform.size.width
+  ) {
+    player.speed.y = 0;
+  }
+
+  requestAnimationFrame(render);
+}
+
+render();
