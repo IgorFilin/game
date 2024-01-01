@@ -10,23 +10,50 @@ const playerImages = {
     ],
     imagesNode: [],
   },
+  jump: {
+    imageCost: [
+      "./assets/images/Warrior_Jump_1.png",
+      "./assets/images/Warrior_Jump_2.png",
+      "./assets/images/Warrior_Jump_3.png",
+    ],
+    imagesNode: [],
+  },
+  run: {
+    imageCost: [
+      "./assets/images/Warrior_Run_1.png",
+      "./assets/images/Warrior_Run_2.png",
+      "./assets/images/Warrior_Run_3.png",
+      "./assets/images/Warrior_Run_4.png",
+      "./assets/images/Warrior_Run_5.png",
+      "./assets/images/Warrior_Run_6.png",
+      "./assets/images/Warrior_Run_7.png",
+      "./assets/images/Warrior_Run_8.png",
+    ],
+    imagesNode: [],
+  },
 };
+for (let i = 0; i < playerImages.jump.imageCost.length; i++) {
+  const src = playerImages.jump.imageCost[i];
+  const playerImage = new Image();
+  playerImage.src = src;
+  playerImages.jump.imagesNode.push(playerImage);
+}
 for (let i = 0; i < playerImages.cost.imageCost.length; i++) {
   const src = playerImages.cost.imageCost[i];
   const playerImage = new Image();
   playerImage.src = src;
   playerImages.cost.imagesNode.push(playerImage);
 }
-let currentImageCost = 0;
+for (let i = 0; i < playerImages.run.imageCost.length; i++) {
+  const src = playerImages.run.imageCost[i];
+  const playerImage = new Image();
+  playerImage.src = src;
+  playerImages.run.imagesNode.push(playerImage);
+}
 
-let playerImage = playerImages.cost.imagesNode[currentImageCost];
-
-setInterval(() => {
-  currentImageCost += 1;
-  if (currentImageCost > playerImages.cost.imagesNode.length - 1)
-    currentImageCost = 0;
-  playerImage = playerImages.cost.imagesNode[currentImageCost];
-}, 150);
+let currentImagesPack = "cost";
+let playerImage;
+let intervalId;
 class Player {
   constructor() {
     this.position = {
@@ -36,9 +63,9 @@ class Player {
     this.currentDirection = 1;
     this.size = {
       width: 150,
-      height: 115,
+      height: 110,
     };
-    this.gravity = 0.4;
+    this.gravity = 0.2;
     this.speed = {
       x: 0,
       y: 0,
@@ -56,6 +83,34 @@ class Player {
     };
   }
   create(ctx) {
+    if (this.speed.y > 0) {
+      // isOnImages = false;
+      currentImagesPack = "jump";
+    } else if (this.speed.x > 0 || this.speed.x < 0) {
+      currentImagesPack = "run";
+    } else {
+      // isOnImages = true;
+      currentImagesPack = "cost";
+    }
+
+    if (!intervalId) {
+      let currentImageCost = 0;
+
+      playerImage =
+        playerImages[currentImagesPack].imagesNode[currentImageCost];
+
+      intervalId = setInterval(() => {
+        console.log("INTERVAL");
+        currentImageCost += 1;
+        if (
+          currentImageCost >
+          playerImages[currentImagesPack].imagesNode.length - 1
+        )
+          currentImageCost = 0;
+        playerImage =
+          playerImages[currentImagesPack].imagesNode[currentImageCost];
+      }, 150);
+    }
     // Сохраняем текущие настройки контекста
     ctx.save();
     let positionX;
@@ -69,6 +124,7 @@ class Player {
     ctx.scale(this.currentDirection, 1);
 
     // Рисуем отзеркаленное изображение
+
     ctx.drawImage(
       playerImage,
       positionX, // Позиция x отзеркаленного изображения
@@ -112,23 +168,15 @@ class Player {
     }
   }
   moved(platforms) {
-    if (this.keys.right.pressed && this.position.x <= canvas.width / 2) {
+    if (this.keys.right.pressed) {
       this.speed.x = 5;
-    } else if (this.keys.left.pressed && this.position.x >= canvas.width / 4) {
+    } else if (this.keys.left.pressed) {
       this.speed.x = -5;
     } else {
-      platforms.forEach((platform) => {
-        if (this.keys.right.pressed) {
-          platform.position.x += -5;
-        }
-        if (this.keys.left.pressed) {
-          platform.position.x += 5;
-        }
-      });
       this.speed.x = 0;
     }
     if (this.keys.space.pressed && this.speed.y === 0) {
-      this.speed.y = -15;
+      this.speed.y = -10;
     }
   }
 }

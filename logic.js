@@ -4,7 +4,7 @@ const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 
 canvas.width = innerWidth;
-canvas.height = innerHeight;
+canvas.height = 1360;
 
 class Platform {
   constructor(x, y, color = "red", width = 200, height = 30) {
@@ -30,6 +30,7 @@ class Platform {
 }
 
 // Слушатели событий
+const player = new Player();
 
 addEventListener("resize", () => {
   player.resize();
@@ -43,8 +44,6 @@ addEventListener("keydown", (e) => {
 addEventListener("keyup", (e) => {
   player.move(e.keyCode, false);
 });
-
-const player = new Player();
 
 const platforms = [new Platform(550, 1150), new Platform(750, 950)];
 
