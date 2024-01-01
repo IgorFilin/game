@@ -19,6 +19,17 @@ class Player {
       x: 0,
       y: 0,
     };
+    this.keys = {
+      right: {
+        pressed: false,
+      },
+      left: {
+        pressed: false,
+      },
+      space: {
+        pressed: false,
+      },
+    };
   }
   create() {
     ctx.fillRect(
@@ -28,10 +39,9 @@ class Player {
       this.size.height
     );
   }
-  moveGravity() {
+  moveRender() {
     this.position.y += this.speed.y;
     this.position.x += this.speed.x;
-
     if (this.position.y + this.size.height <= canvas.height) {
       this.speed.y += this.gravity;
     } else {
@@ -39,24 +49,46 @@ class Player {
       this.position.y = canvas.height - this.size.height;
     }
   }
-  move(keyCode) {
+  resize() {
+    this.position.y = canvas.height - this.size.height;
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+  }
+  move(keyCode, statusPressed = true) {
     switch (keyCode) {
-      case 39:
-        this.speed.x += 7;
+      case 68:
+        this.keys.right.pressed = statusPressed;
         break;
-      case 37:
-        this.speed.x -= 7;
+      case 65:
+        this.keys.left.pressed = statusPressed;
         break;
-      case 38: {
-        this.speed.y -= 15;
+      case 32: {
+        this.keys.space.pressed = statusPressed;
         break;
       }
     }
   }
+  moved() {
+    if (this.keys.right.pressed) {
+      this.speed.x = 5;
+    } else if (this.keys.left.pressed) {
+      this.speed.x = -5;
+    } else {
+      this.speed.x = 0;
+    }
+    if (
+      this.keys.space.pressed &&
+      this.position.y === canvas.height - this.size.height
+    ) {
+      this.speed.y = -25;
+    }
+  }
+
   render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     this.create();
-    this.moveGravity();
+    this.moved();
+    this.moveRender();
     requestAnimationFrame(() => this.render());
   }
 }
@@ -64,18 +96,16 @@ class Player {
 // Слушатели событий
 
 addEventListener("resize", () => {
-  player.position.y = 0;
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
+  player.resize();
 });
 
 addEventListener("keydown", (e) => {
-  // 39 right, 37 left, 38 up
+  // 68 right, 65 left, 32 up
   player.move(e.keyCode);
 });
 
-addEventListener("keyup", () => {
-  player.speed.x = 0;
+addEventListener("keyup", (e) => {
+  player.move(e.keyCode, false);
 });
 
 const player = new Player();
