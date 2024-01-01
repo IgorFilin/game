@@ -1,11 +1,9 @@
 const canvas = document.querySelector("#canvas");
-
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
 /** @type {CanvasRenderingContext2D} */
 const ctx = canvas.getContext("2d");
 
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 class Player {
   constructor() {
     this.position = {
@@ -16,7 +14,7 @@ class Player {
       width: 50,
       height: 50,
     };
-    this.gravity = 0.5;
+    this.gravity = 1;
     this.speed = {
       x: 0,
       y: 0,
@@ -33,9 +31,13 @@ class Player {
   moveGravity() {
     this.position.y += this.speed.y;
     this.position.x += this.speed.x;
-    if (this.position.y + this.size.height < canvas.height) {
+
+    if (this.position.y + this.size.height <= canvas.height) {
       this.speed.y += this.gravity;
-    } else this.speed.y = 0;
+    } else {
+      this.speed.y = 0;
+      this.position.y = canvas.height - this.size.height;
+    }
   }
   move(keyCode) {
     switch (keyCode) {
@@ -60,6 +62,12 @@ class Player {
 }
 
 // Слушатели событий
+
+addEventListener("resize", () => {
+  player.position.y = 0;
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+});
 
 addEventListener("keydown", (e) => {
   // 39 right, 37 left, 38 up
