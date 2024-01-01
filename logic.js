@@ -1,95 +1,10 @@
+import { Player } from "./player.js";
 const canvas = document.querySelector("#canvas");
 /** @type {CanvasRenderingContext2D} */
 const ctx = canvas.getContext("2d");
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
-class Player {
-  constructor() {
-    this.position = {
-      x: 50,
-      y: 50,
-    };
-    this.size = {
-      width: 50,
-      height: 50,
-    };
-    this.gravity = 0.4;
-    this.speed = {
-      x: 0,
-      y: 0,
-    };
-    this.keys = {
-      right: {
-        pressed: false,
-      },
-      left: {
-        pressed: false,
-      },
-      space: {
-        pressed: false,
-      },
-    };
-  }
-  create() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(
-      this.position.x,
-      this.position.y,
-      this.size.width,
-      this.size.height
-    );
-  }
-  moveRender() {
-    this.position.y += this.speed.y;
-    this.position.x += this.speed.x;
-    if (this.position.y + this.size.height < canvas.height) {
-      this.speed.y += this.gravity;
-    } else {
-      this.speed.y = 0;
-      this.position.y = canvas.height - this.size.height;
-    }
-  }
-  resize() {
-    this.position.y = canvas.height - this.size.height;
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-  }
-  move(keyCode, statusPressed = true) {
-    switch (keyCode) {
-      case 68:
-        this.keys.right.pressed = statusPressed;
-        break;
-      case 65:
-        this.keys.left.pressed = statusPressed;
-        break;
-      case 32: {
-        this.keys.space.pressed = statusPressed;
-        break;
-      }
-    }
-  }
-  moved() {
-    if (this.keys.right.pressed && this.position.x <= canvas.width / 2) {
-      this.speed.x = 5;
-    } else if (this.keys.left.pressed && this.position.x >= canvas.width / 4) {
-      this.speed.x = -5;
-    } else {
-      platforms.forEach((platform) => {
-        if (this.keys.right.pressed) {
-          platform.position.x += -5;
-        }
-        if (this.keys.left.pressed) {
-          platform.position.x += 5;
-        }
-      });
-      this.speed.x = 0;
-    }
-    if (this.keys.space.pressed && this.speed.y === 0) {
-      this.speed.y = -15;
-    }
-  }
-}
 
 class Platform {
   constructor(x, y, color = "red", width = 200, height = 30) {
@@ -134,13 +49,12 @@ const player = new Player();
 const platforms = [new Platform(550, 1150), new Platform(750, 950)];
 
 // render функция
-let is = false;
 
 function render() {
   // initial
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  player.create();
-  player.moved();
+  player.create(ctx);
+  player.moved(platforms);
   player.moveRender();
   platforms.forEach((platform) => {
     platform.create();
