@@ -146,11 +146,6 @@ class Player {
       this.position.y = canvas.height - this.size.height;
     }
   }
-  resize() {
-    this.position.y = canvas.height - this.size.height;
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-  }
   move(keyCode, statusPressed = true) {
     switch (keyCode) {
       case 68:
