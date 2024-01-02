@@ -29,6 +29,8 @@ addEventListener("keyup", (e) => {
 function render() {
   // initial
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   player.create(ctx);
   player.moved(platforms);
   player.moveRender();
