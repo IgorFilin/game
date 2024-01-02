@@ -8,7 +8,6 @@ const ctx = canvas.getContext("2d");
 
 canvas.width = 1024;
 canvas.height = 756;
-d;
 
 // Создание сущностей
 const player = new Player();
@@ -21,7 +20,37 @@ const objects = [
   new GenerationObject(
     "./assets/images/object/base_platform.png",
     0,
-    canvas.height - 100
+    canvas.height - 40
+  ),
+  new GenerationObject(
+    "./assets/images/object/base_platform.png",
+    250,
+    canvas.height - 40
+  ),
+  new GenerationObject(
+    "./assets/images/object/base_platform.png",
+    500,
+    canvas.height - 40
+  ),
+  new GenerationObject(
+    "./assets/images/object/base_platform.png",
+    750,
+    canvas.height - 40
+  ),
+  new GenerationObject(
+    "./assets/images/object/base_platform.png",
+    1000,
+    canvas.height - 40
+  ),
+  new GenerationObject(
+    "./assets/images/object/base_platform.png",
+    550,
+    canvas.height - 250
+  ),
+  new GenerationObject(
+    "./assets/images/object/base_platform.png",
+    350,
+    canvas.height - 450
   ),
 ];
 
