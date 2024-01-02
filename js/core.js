@@ -1,4 +1,4 @@
-import { Player } from "./player.js";
+import { Player } from "./player/player.js";
 import { Platform } from "./platform.js";
 
 const canvas = document.querySelector("#canvas");

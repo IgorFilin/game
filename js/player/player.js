@@ -1,59 +1,5 @@
-const playerImages = {
-  cost: {
-    imageCost: [
-      "./assets/images/Warrior_Idle_1.png",
-      "./assets/images/Warrior_Idle_2.png",
-      "./assets/images/Warrior_Idle_3.png",
-      "./assets/images/Warrior_Idle_4.png",
-      "./assets/images/Warrior_Idle_5.png",
-      "./assets/images/Warrior_Idle_6.png",
-    ],
-    imagesNode: [],
-  },
-  jump: {
-    imageCost: [
-      "./assets/images/Warrior_Jump_1.png",
-      "./assets/images/Warrior_Jump_2.png",
-      "./assets/images/Warrior_Jump_3.png",
-    ],
-    imagesNode: [],
-  },
-  run: {
-    imageCost: [
-      "./assets/images/Warrior_Run_1.png",
-      "./assets/images/Warrior_Run_2.png",
-      "./assets/images/Warrior_Run_3.png",
-      "./assets/images/Warrior_Run_4.png",
-      "./assets/images/Warrior_Run_5.png",
-      "./assets/images/Warrior_Run_6.png",
-      "./assets/images/Warrior_Run_7.png",
-      "./assets/images/Warrior_Run_8.png",
-    ],
-    imagesNode: [],
-  },
-};
-for (let i = 0; i < playerImages.jump.imageCost.length; i++) {
-  const src = playerImages.jump.imageCost[i];
-  const playerImage = new Image();
-  playerImage.src = src;
-  playerImages.jump.imagesNode.push(playerImage);
-}
-for (let i = 0; i < playerImages.cost.imageCost.length; i++) {
-  const src = playerImages.cost.imageCost[i];
-  const playerImage = new Image();
-  playerImage.src = src;
-  playerImages.cost.imagesNode.push(playerImage);
-}
-for (let i = 0; i < playerImages.run.imageCost.length; i++) {
-  const src = playerImages.run.imageCost[i];
-  const playerImage = new Image();
-  playerImage.src = src;
-  playerImages.run.imagesNode.push(playerImage);
-}
+import { playerImages } from "./data.js";
 
-let currentImagesPack = "cost";
-let playerImage;
-let intervalId;
 class Player {
   constructor() {
     this.position = {
@@ -61,6 +7,9 @@ class Player {
       y: 50,
     };
     this.currentDirection = 1;
+    this.currentImagesPack = "cost";
+    this.intervalId;
+    this.playerImage;
     this.size = {
       width: 150,
       height: 110,
@@ -83,32 +32,29 @@ class Player {
     };
   }
   create(ctx) {
-    if (this.speed.y > 0) {
-      // isOnImages = false;
-      currentImagesPack = "jump";
+    if (this.speed.y !== 0) {
+      this.currentImagesPack = "jump";
     } else if (this.speed.x > 0 || this.speed.x < 0) {
-      currentImagesPack = "run";
+      this.currentImagesPack = "run";
     } else {
-      // isOnImages = true;
-      currentImagesPack = "cost";
+      this.currentImagesPack = "cost";
     }
 
-    if (!intervalId) {
+    if (!this.intervalId) {
       let currentImageCost = 0;
 
-      playerImage =
-        playerImages[currentImagesPack].imagesNode[currentImageCost];
+      this.playerImage =
+        playerImages[this.currentImagesPack].imagesNode[currentImageCost];
 
-      intervalId = setInterval(() => {
-        console.log("INTERVAL");
+      this.intervalId = setInterval(() => {
         currentImageCost += 1;
         if (
           currentImageCost >
-          playerImages[currentImagesPack].imagesNode.length - 1
+          playerImages[this.currentImagesPack].imagesNode.length - 1
         )
           currentImageCost = 0;
-        playerImage =
-          playerImages[currentImagesPack].imagesNode[currentImageCost];
+        this.playerImage =
+          playerImages[this.currentImagesPack].imagesNode[currentImageCost];
       }, 150);
     }
     // Сохраняем текущие настройки контекста
@@ -126,7 +72,7 @@ class Player {
     // Рисуем отзеркаленное изображение
 
     ctx.drawImage(
-      playerImage,
+      this.playerImage,
       positionX, // Позиция x отзеркаленного изображения
       this.position.y,
       this.size.width,
@@ -162,7 +108,7 @@ class Player {
       }
     }
   }
-  moved(platforms) {
+  moved() {
     if (this.keys.right.pressed) {
       this.speed.x = 5;
     } else if (this.keys.left.pressed) {
