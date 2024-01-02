@@ -11,8 +11,8 @@ class Player {
     this.intervalId;
     this.playerImage;
     this.size = {
-      width: 150,
-      height: 110,
+      width: 40,
+      height: 60,
     };
     this.gravity = 0.2;
     this.speed = {
@@ -45,6 +45,11 @@ class Player {
 
       this.playerImage =
         playerImages[this.currentImagesPack].imagesNode[currentImageCost];
+
+      if (!this.size.width && !this.size.height) {
+        this.size.width = this.playerImage.width;
+        this.size.height = this.playerImage.height;
+      }
 
       this.intervalId = setInterval(() => {
         currentImageCost += 1;

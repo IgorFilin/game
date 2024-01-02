@@ -1,5 +1,6 @@
 import { Player } from "./player/player.js";
 import { Platform } from "./platform.js";
+import { GenerationObject } from "./object.js";
 
 const canvas = document.querySelector("#canvas");
 /** @type {CanvasRenderingContext2D} */
@@ -7,11 +8,22 @@ const ctx = canvas.getContext("2d");
 
 canvas.width = 1024;
 canvas.height = 756;
+d;
 
 // Создание сущностей
 const player = new Player();
 
-const platforms = [new Platform(550, 350), new Platform(750, 600)];
+// const platforms = [new Platform(550, 350), new Platform(750, 600)];
+
+const objects = [
+  new GenerationObject("./assets/images/object/background_top.png", 0, 0),
+  new GenerationObject("./assets/images/object/background.png", 0, 0),
+  new GenerationObject(
+    "./assets/images/object/base_platform.png",
+    0,
+    canvas.height - 100
+  ),
+];
 
 // Слушатели событий
 
@@ -31,14 +43,17 @@ function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  player.create(ctx);
-  player.moved(platforms);
-  player.moveRender();
-  platforms.forEach((platform) => {
-    platform.create(ctx);
-    platform.collision(player, platform);
+  // platforms.forEach((platform) => {
+  //   platform.create(ctx);
+  //   platform.collision(player, platform);
+  // });
+  objects.forEach((object) => {
+    object.render(ctx);
+    object.collision(player, object);
   });
-
+  player.create(ctx);
+  player.moved();
+  player.moveRender();
   // animation
   requestAnimationFrame(render);
 }
