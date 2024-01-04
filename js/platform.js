@@ -1,15 +1,5 @@
-class Platform {
-  constructor(x, y, color = "red", width = 200, height = 30) {
-    this.position = {
-      x: x,
-      y: y,
-    };
-    this.size = {
-      width,
-      height,
-    };
-    this.color = color;
-  }
+import { GenerationObject } from "./object.js";
+class Platform extends GenerationObject {
   collision(player, platform) {
     if (
       player.position.y + player.size.height <= platform.position.y &&
@@ -20,15 +10,6 @@ class Platform {
     ) {
       player.speed.y = 0;
     }
-  }
-  create(ctx) {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(
-      this.position.x,
-      this.position.y,
-      this.size.width,
-      this.size.height
-    );
   }
 }
 

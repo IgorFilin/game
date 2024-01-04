@@ -34,7 +34,10 @@ class Player {
   create(ctx) {
     if (this.speed.y !== 0) {
       this.currentImagesPack = "jump";
-    } else if (this.speed.x > 0 || this.speed.x < 0) {
+    } else if (
+      this.keys.right.pressed ||
+      (this.keys.left.pressed && this.speed.y <= 0)
+    ) {
       this.currentImagesPack = "run";
     } else {
       this.currentImagesPack = "cost";
@@ -88,6 +91,7 @@ class Player {
     ctx.restore();
   }
   moveRender() {
+    console.log(this.position.x);
     this.position.y += this.speed.y;
     this.position.x += this.speed.x;
     if (this.position.y + this.size.height < canvas.height) {
@@ -113,11 +117,25 @@ class Player {
       }
     }
   }
-  moved() {
+  moved(objects) {
     if (this.keys.right.pressed) {
-      this.speed.x = 5;
+      if (this.position.x < 700) {
+        this.speed.x = 3;
+      } else {
+        objects.forEach((object) => {
+          object.position.x -= 3;
+        });
+        this.speed.x = 0;
+      }
     } else if (this.keys.left.pressed) {
-      this.speed.x = -5;
+      if (this.position.x > 200) {
+        this.speed.x = -3;
+      } else {
+        objects.forEach((object) => {
+          object.position.x += 3;
+        });
+        this.speed.x = 0;
+      }
     } else {
       this.speed.x = 0;
     }

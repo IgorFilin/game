@@ -16,17 +16,6 @@ class GenerationObject {
       this.size.height = this.image.height;
     };
   }
-  collision(player, object) {
-    if (
-      player.position.y + player.size.height <= object.position.y &&
-      player.position.y + player.size.height + player.speed.y >=
-        object.position.y &&
-      player.position.x + player.size.height >= object.position.x &&
-      player.position.x <= object.position.x + object.size.width
-    ) {
-      player.speed.y = 0;
-    }
-  }
   render(ctx) {
     ctx.drawImage(
       this.image,
