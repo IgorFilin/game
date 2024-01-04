@@ -19,6 +19,11 @@ const objects = [
   new GenerationObject("./assets/images/object/background4.png", 0, 0),
   new GenerationObject("./assets/images/object/background5.png", 0, 0),
   new GenerationObject("./assets/images/object/background6.png", 0, 0),
+  new GenerationObject(
+    "./assets/images/object/lamp.png",
+    300,
+    canvas.height - 165
+  ),
 ];
 
 const movedObject = [];
