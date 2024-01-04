@@ -15,7 +15,13 @@ const player = new Player();
 const objects = [
   new GenerationObject("./assets/images/object/background_top.png", 0, 0),
   new GenerationObject("./assets/images/object/background.png", 0, 0),
+  new GenerationObject("./assets/images/object/background3.png", 0, 0),
+  new GenerationObject("./assets/images/object/background4.png", 0, 0),
+  new GenerationObject("./assets/images/object/background5.png", 0, 0),
+  new GenerationObject("./assets/images/object/background6.png", 0, 0),
 ];
+
+const movedObject = [];
 
 const platforms = [
   new Platform(
@@ -74,12 +80,15 @@ function render() {
   objects.forEach((object) => {
     object.render(ctx);
   });
+  movedObject.forEach((object) => {
+    object.render(ctx);
+  });
   platforms.forEach((platform) => {
     platform.render(ctx);
     platform.collision(player, platform);
   });
   player.create(ctx);
-  player.moved(platforms);
+  player.moved(platforms, movedObject);
   player.moveRender();
   // animation
   requestAnimationFrame(render);

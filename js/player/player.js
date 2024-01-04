@@ -117,13 +117,16 @@ class Player {
       }
     }
   }
-  moved(objects) {
+  moved(objects, movedObject) {
     if (this.keys.right.pressed) {
       if (this.position.x < 700) {
         this.speed.x = 3;
       } else {
         objects.forEach((object) => {
           object.position.x -= 3;
+        });
+        movedObject.forEach((object) => {
+          object.position.x -= 2;
         });
         this.speed.x = 0;
       }
@@ -133,6 +136,9 @@ class Player {
       } else {
         objects.forEach((object) => {
           object.position.x += 3;
+        });
+        movedObject.forEach((object) => {
+          object.position.x += 2;
         });
         this.speed.x = 0;
       }
