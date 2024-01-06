@@ -11,8 +11,8 @@ class Player {
     this.intervalId;
     this.playerImage;
     this.size = {
-      width: 40,
-      height: 60,
+      width: 37,
+      height: 50,
     };
     this.gravity = 0.2;
     this.speed = {
@@ -65,6 +65,7 @@ class Player {
           playerImages[this.currentImagesPack].imagesNode[currentImageCost];
       }, 150);
     }
+
     // Сохраняем текущие настройки контекста
     ctx.save();
     let positionX;
@@ -91,14 +92,13 @@ class Player {
     ctx.restore();
   }
   moveRender() {
-    console.log(this.position.x);
     this.position.y += this.speed.y;
     this.position.x += this.speed.x;
     if (this.position.y + this.size.height < canvas.height) {
       this.speed.y += this.gravity;
     } else {
-      this.speed.y = 0;
-      this.position.y = canvas.height - this.size.height;
+      // this.speed.y = 0;
+      // this.position.y = canvas.height - this.size.height;
     }
   }
   move(keyCode, statusPressed = true) {
