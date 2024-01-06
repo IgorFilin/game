@@ -3,13 +3,18 @@ import { playerImages } from "./data.js";
 class Player {
   constructor() {
     this.position = {
-      x: 150,
+      x: 250,
       y: 50,
+    };
+    this.extremePoints = {
+      positive: 700,
+      negative: 200,
     };
     this.currentDirection = 1;
     this.currentImagesPack = "cost";
     this.intervalId;
     this.playerImage;
+    this.timeOutCamera;
     this.size = {
       width: 37,
       height: 50,
@@ -32,6 +37,7 @@ class Player {
     };
   }
   create(ctx) {
+    // Изменения пака изображений для анимации разных действий персонажа
     if (this.speed.y !== 0) {
       this.currentImagesPack = "jump";
     } else if (
@@ -43,6 +49,7 @@ class Player {
       this.currentImagesPack = "cost";
     }
 
+    // Запуск интервала для анимирования персонажа с помощью пака картинок
     if (!this.intervalId) {
       let currentImageCost = 0;
 
@@ -97,11 +104,11 @@ class Player {
     if (this.position.y + this.size.height < canvas.height) {
       this.speed.y += this.gravity;
     } else {
-      // this.speed.y = 0;
-      // this.position.y = canvas.height - this.size.height;
+      this.speed.y = 0;
+      this.position.y = canvas.height - this.size.height;
     }
   }
-  move(keyCode, statusPressed = true) {
+  pressedKeysMove(keyCode, statusPressed = true) {
     switch (keyCode) {
       case 68:
         this.keys.right.pressed = statusPressed;
@@ -117,9 +124,52 @@ class Player {
       }
     }
   }
-  moved(objects, movedObject) {
+  moveCamera(objects, movedObject, canvas) {
+    if (
+      (this.speed.x === 0 && this.position.x <= this.extremePoints.negative) ||
+      this.position.x >= this.extremePoints.positive
+    ) {
+      let centerPosition = canvas.width / 2;
+      let idInterval;
+
+      let direction = -this.currentDirection;
+      console.log(idInterval);
+      if (!this.timeOutCamera && !idInterval) {
+        this.timeOutCamera = setTimeout(() => {
+          console.log("debug", this.timeOutCamera);
+          // logic moved camera
+          idInterval = setInterval(() => {
+            this.position.x += direction;
+            objects.forEach((object) => {
+              object.position.x += direction;
+            });
+            movedObject.forEach((object) => {
+              object.position.x += direction;
+            });
+            if (
+              centerPosition === this.position.x ||
+              this.currentDirection === direction
+            ) {
+              clearInterval(idInterval);
+              this.timeOutCamera = null;
+            }
+          }, 0.5);
+          //
+        }, 400);
+        // } else {
+        //   clearTimeout(this.timeOutCamera);
+        //   this.timeOutCamera = null;
+        // }
+      }
+    }
+    if (this.keys.right.pressed || this.keys.left.pressed) {
+      this.timeOutCamera = null;
+      clearTimeout(this.timeOutCamera);
+    }
+  }
+  moved(objects, movedObject, canvas) {
     if (this.keys.right.pressed) {
-      if (this.position.x < 700) {
+      if (this.position.x < this.extremePoints.positive) {
         this.speed.x = 3;
       } else {
         objects.forEach((object) => {
@@ -131,7 +181,7 @@ class Player {
         this.speed.x = 0;
       }
     } else if (this.keys.left.pressed) {
-      if (this.position.x > 200) {
+      if (this.position.x > this.extremePoints.negative) {
         this.speed.x = -3;
       } else {
         objects.forEach((object) => {
@@ -143,6 +193,7 @@ class Player {
         this.speed.x = 0;
       }
     } else {
+      this.moveCamera(objects, movedObject, canvas);
       this.speed.x = 0;
     }
     if (this.keys.space.pressed && this.speed.y === 0) {

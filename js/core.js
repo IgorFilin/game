@@ -74,15 +74,11 @@ function init() {
 
 addEventListener("keydown", (e) => {
   // 68 right, 65 left, 32 up
-  player.move(e.keyCode);
+  player.pressedKeysMove(e.keyCode);
 });
 
 addEventListener("keyup", (e) => {
-  player.move(e.keyCode, false);
-});
-
-addEventListener("scroll", (e) => {
-  console.log(e);
+  player.pressedKeysMove(e.keyCode, false);
 });
 
 //engine
@@ -103,20 +99,18 @@ function engine() {
     platform.collision(player, platform);
   });
   player.create(ctx);
-  player.moved(platforms, movedObject);
+  player.moved(platforms, movedObject, canvas);
   player.moveRender();
-  if (player.position.y + player.size.height >= canvas.height) {
-    init();
-  }
+  // if (player.position.y + player.size.height >= canvas.height) {
+  //   init();
+  // }
 }
 
-// render функция
+// gameLoop функция
 
-function render() {
-  // initial
+function gameLoop() {
   engine();
-  // animation
-  requestAnimationFrame(render);
+  requestAnimationFrame(gameLoop);
 }
 
-render();
+gameLoop();
