@@ -1,4 +1,5 @@
 import { Player } from "./player/player.js";
+import { Enemy } from "./enemy.js";
 import { Platform } from "./platform.js";
 import { GenerationObject } from "./object.js";
 
@@ -12,12 +13,13 @@ canvas.height = 756;
 // данные
 
 const staticBackgroundObjects = [
-  new GenerationObject("./assets/images/object/background_top.png", 0, 0),
-  new GenerationObject("./assets/images/object/background.png", 0, 0),
-  new GenerationObject("./assets/images/object/background3.png", 0, 0),
-  new GenerationObject("./assets/images/object/background4.png", 0, 0),
-  new GenerationObject("./assets/images/object/background5.png", 0, 0),
-  new GenerationObject("./assets/images/object/background6.png", 0, 0),
+  // new GenerationObject("./assets/images/object/background_top.png", 0, 0),
+  new GenerationObject("./assets/images/object/background_new.png", 0, 0),
+  //  new GenerationObject("./assets/images/object/background.png", 0, 0),
+  //  new GenerationObject("./assets/images/object/background3.png", 0, 0),
+  //  new GenerationObject("./assets/images/object/background4.png", 0, 0),
+  //  new GenerationObject("./assets/images/object/background5.png", 0, 0),
+  //  new GenerationObject("./assets/images/object/background6.png", 0, 0),
 ];
 
 // Создание сущностей
@@ -27,46 +29,53 @@ let platforms = [];
 
 let player;
 
+let enemy;
+
 function init() {
   platforms = [
     new Platform(
-      "./assets/images/object/base_platform.png",
+      "./assets/images/object/base_platform1.png",
       0,
       canvas.height - 55
     ),
     new Platform(
-      "./assets/images/object/base_platform.png",
+      "./assets/images/object/base_platform1.png",
       400,
       canvas.height - 55
     ),
     new Platform(
-      "./assets/images/object/base_platform.png",
+      "./assets/images/object/base_platform1.png",
       750,
       canvas.height - 55
     ),
     new Platform(
-      "./assets/images/object/base_platform.png",
+      "./assets/images/object/base_platform1.png",
       1000,
       canvas.height - 55
     ),
     new Platform(
-      "./assets/images/object/base_platform.png",
+      "./assets/images/object/base_platform1.png",
       1500,
       canvas.height - 55
     ),
     new Platform(
-      "./assets/images/object/base_platform.png",
+      "./assets/images/object/base_platform1.png",
       550,
       canvas.height - 250
     ),
     new Platform(
-      "./assets/images/object/base_platform.png",
+      "./assets/images/object/base_platform1.png",
       350,
       canvas.height - 450
     ),
+    new Platform(
+      "./assets/images/object/base_platform1.png",
+      1250,
+      canvas.height - 250
+    ),
   ];
   player = new Player();
-
+  enemy = new Enemy(250, canvas.height - 120);
   movedObject = [];
 }
 
@@ -82,7 +91,6 @@ addEventListener("keyup", (e) => {
 });
 
 //engine
-
 function engine() {
   if (!player) {
     init();
@@ -101,9 +109,10 @@ function engine() {
   player.create(ctx);
   player.moved(platforms, movedObject, canvas);
   player.moveRender();
-  // if (player.position.y + player.size.height >= canvas.height) {
-  //   init();
-  // }
+  if (player.position.y + player.size.height >= canvas.height) {
+    init();
+  }
+  enemy.create(ctx);
 }
 
 // gameLoop функция

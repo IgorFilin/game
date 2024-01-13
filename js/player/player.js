@@ -86,7 +86,8 @@ class Player {
     ctx.scale(this.currentDirection, 1);
 
     // Рисуем отзеркаленное изображение
-
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
     ctx.drawImage(
       this.playerImage,
       positionX, // Позиция x отзеркаленного изображения
